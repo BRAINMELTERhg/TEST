@@ -102,7 +102,7 @@ this.door.setBounce(1)
 this.door.setInteractive()
 
 this.door.on("pointerdown",()=>{
-window.location.href="https://instagram.com/weirddreams.zzz"
+window.open("https://instagram.com/weirddreams.zzz", "_blank")
 })
 
 /* MUSIC */
@@ -112,9 +112,9 @@ this.musicOn = false  // start OFF
 
 // Music toggle text
 this.musicText = this.add.text(20, 20, "music off", { font: "24px Arial", fill: "#ffffff" })
-    .setScrollFactor(0)
-    .setDepth(1000)
-    .setInteractive()
+this.musicText.setScrollFactor(0); // keeps text fixed on screen, ignores camera
+this.musicText.setDepth(1000);     // ensures text is always on top
+this.musicText.setInteractive();
 
 this.musicText.on("pointerdown", () => {
     if(!this.musicOn){
@@ -160,7 +160,8 @@ if(this.sys.game.device.input.touch){
     this.input.on("pointermove", (pointer) => {
         if(pointer.isDown){
             let dragDistance = pointer.x - this.dragStartX
-            this.targetScroll = this.cameraStartX - dragDistance
+            let speedFactor = 2.5
+            this.targetScroll = this.cameraStartX - dragDistance * speedFactor
             this.targetScroll = Phaser.Math.Clamp(this.targetScroll, 0, this.maxScroll)
         }
     })
@@ -187,15 +188,15 @@ this.cameras.main.scrollX = Phaser.Math.Linear(
 }
 
 resizeGame(){
-
-let height = this.scale.height
-
-let zoom = height / 720
-
-this.cameras.main.setZoom(zoom)
-
-this.maxScroll = this.WORLD_WIDTH - (this.scale.width / zoom)
-
+    let height = this.scale.height
+    let zoom = height / 720
+    this.cameras.main.setZoom(zoom)
+    this.maxScroll = this.WORLD_WIDTH - (this.scale.width / zoom)
 }
+
+//this.resizeGame()
+//this.scale.on("resize", this.resizeGame, this)
+
+
 
 }
