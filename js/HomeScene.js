@@ -107,85 +107,61 @@ window.location.href="https://instagram.com/weirddreams.zzz"
 
 /* MUSIC */
 
-//unlock audio blocker
-this.input.once("pointerdown", () => {
+this.music = this.sound.add("music", { loop: true })
+this.musicOn = false  // start OFF
 
-if(!this.sound.locked){
+// Music toggle text
+this.musicText = this.add.text(20, 20, "music off", { font: "24px Arial", fill: "#ffffff" })
+    .setScrollFactor(0)
+    .setDepth(1000)
+    .setInteractive()
 
-return
-
-}
-
-this.sound.unlock()
-
+this.musicText.on("pointerdown", () => {
+    if(!this.musicOn){
+        this.music.play()
+        this.musicText.setText("music on")
+        this.musicOn = true
+    } else {
+        this.music.stop()
+        this.musicText.setText("music off")
+        this.musicOn = false
+    }
 })
 
-//main toggle
-this.music = this.sound.add("music",{loop:true})
-
-this.musicOn = false
-
-this.musicText = this.add.text(20,20,"music off",{
-font:"24px Arial",
-fill:"#ffffff"
-}).setScrollFactor(0)
-
-this.musicText.setInteractive()
-
-this.musicText.on("pointerdown",()=>{
-
-if(this.musicOn){
-
-this.music.stop()
-this.musicText.setText("music off")
-this.musicOn=false
-
-}else{
-
-this.music.play()
-this.musicText.setText("music on")
-this.musicOn=true
-
-}
-
+// Unlock audio on first tap/click anywhere
+this.input.once("pointerdown", () => {
+    if(this.sound.locked){
+        this.sound.unlock()
+    }
 })
 
 /* CAMERA LIMITS */
+this.targetScroll = 0
+this.maxScroll = this.WORLD_WIDTH - (this.scale.width / (this.scale.height / 720)) // keep zoom scaling
 
-this.maxScroll = this.WORLD_WIDTH - this.scale.width
-
-
-// DESKTOP SCROLL (mouse wheel / trackpad)
+/* SCROLLING */
+// DESKTOP: mouse wheel & trackpad
 this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY) => {
-    this.cameras.main.scrollX += deltaY * 2.5   // adjust speed
-    this.cameras.main.scrollX = Phaser.Math.Clamp(
-        this.cameras.main.scrollX,
-        0,
-        this.maxScroll
-    )
+    this.targetScroll += deltaY * 2.5   // adjust speed
+    this.targetScroll = Phaser.Math.Clamp(this.targetScroll, 0, this.maxScroll)
 })
 
-
-/* TOUCH / MOBILE DRAG SCROLL */
+// MOBILE: touch drag
 if(this.sys.game.device.input.touch){
 
     this.dragStartX = 0
     this.cameraStartX = 0
 
-    this.input.on("pointerdown",(pointer)=>{
+    this.input.on("pointerdown", (pointer) => {
         this.dragStartX = pointer.x
-        this.cameraStartX = this.cameras.main.scrollX
+        this.cameraStartX = this.targetScroll
     })
 
-    this.input.on("pointermove",(pointer)=>{
+    this.input.on("pointermove", (pointer) => {
         if(pointer.isDown){
             let dragDistance = pointer.x - this.dragStartX
-            this.cameras.main.scrollX = this.cameraStartX - dragDistance
-            this.cameras.main.scrollX = Phaser.Math.Clamp(
-                this.cameras.main.scrollX,
-                0,
-                this.maxScroll
-            )
+            this.targetScroll = this.cameraStartX - dragDistance
+            this.targetScroll = Phaser.Math.Clamp(this.targetScroll, 0, this.maxScroll)
         }
     })
 
@@ -200,6 +176,13 @@ update(){
 
 this.stars.tilePositionX += 0.3
 this.stars.tilePositionY -= 0.2
+
+/* SMOOTH SCROLLING */
+this.cameras.main.scrollX = Phaser.Math.Linear(
+    this.cameras.main.scrollX,
+    this.targetScroll,
+    0.15
+)
 
 }
 
