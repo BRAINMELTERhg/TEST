@@ -12,7 +12,7 @@ this.load.image("floor","assets/images/FLOOR.png")
 
 this.load.spritesheet("logo","assets/sprites/LOGO.png",{
 frameWidth:290,
-frameHeight:290
+frameHeight:141
 })
 
 this.load.spritesheet("door","assets/sprites/WD_DOOR.png",{
@@ -55,15 +55,15 @@ this.floor = this.add.image(
 /* LOGO */
 
 this.logo = this.add.sprite(
-2550,
-300,
+250,
+250,
 "logo"
 )
 
 this.anims.create({
 key:"logo_anim",
 frames:this.anims.generateFrameNumbers("logo"),
-frameRate:8,
+frameRate:9,
 repeat:-1
 })
 
@@ -72,8 +72,8 @@ this.logo.play("logo_anim")
 /* DOOR */
 
 this.door = this.physics.add.sprite(
-2600,
-600,
+300,
+500,
 "door"
 )
 
@@ -86,7 +86,7 @@ repeat:-1
 
 this.door.play("door_anim")
 
-this.door.setVelocityX(120)
+this.door.setVelocityX(80)
 this.door.setCollideWorldBounds(true)
 this.door.setBounce(1)
 
