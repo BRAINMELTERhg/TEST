@@ -39,6 +39,12 @@ this.resizeGame()
 
 this.scale.on("resize", this.resizeGame, this)
 
+ // --- first user interaction for mobile ---
+    this.input.once("pointerdown", () => {
+        if (this.sound.locked) this.sound.unlock();
+        // you can also do other mobile-specific setup here if needed
+    });
+
 
 
 /* STAR BACKGROUND */
@@ -99,41 +105,47 @@ this.door.setBounce(1)
 
 /* CLICKABLE DOOR */
 
-this.door.setInteractive()
+this.door.setInteractive(
+    new Phaser.Geom.Rectangle(20, 10, 210, 230),
+    Phaser.Geom.Rectangle.Contains
+);
 
-this.door.on("pointerdown",()=>{
-window.open("https://instagram.com/weirddreams.zzz", "_blank")
-})
+this.door.on("pointerdown", () => {
+    // direct user tap triggers the new tab
+    window.open("https://instagram.com/weirddreams.zzz", "_blank");
+});
 
 /* MUSIC */
 
-this.music = this.sound.add("music", { loop: true })
-this.musicOn = false  // start OFF
+this.music = this.sound.add("music", { loop: true });
+this.musicOn = false; // start OFF
 
-// Music toggle text
-this.musicText = this.add.text(20, 20, "music off", { font: "24px Arial", fill: "#ffffff" })
-this.musicText.setScrollFactor(0); // keeps text fixed on screen, ignores camera
-this.musicText.setDepth(1000);     // ensures text is always on top
-this.musicText.setInteractive();
+// Create music toggle text
+this.musicText = this.add.text(20, 20, "music off", {
+    font: "24px Arial",
+    fill: "#ffffff"
+})
+.setScrollFactor(0)
+.setDepth(1000)
+.setInteractive();
 
 this.musicText.on("pointerdown", () => {
-    if(!this.musicOn){
-        this.music.play()
-        this.musicText.setText("music on")
-        this.musicOn = true
+    // This tap unlocks audio and plays/stops music
+    if (!this.musicOn) {
+        if (this.sound.locked) {
+            this.sound.unlock(); // unlocks audio on mobile
+        }
+        this.music.play();
+        this.musicText.setText("music on");
+        this.musicOn = true;
     } else {
-        this.music.stop()
-        this.musicText.setText("music off")
-        this.musicOn = false
+        this.music.stop();
+        this.musicText.setText("music off");
+        this.musicOn = false;
     }
-})
+});
 
-// Unlock audio on first tap/click anywhere
-this.input.once("pointerdown", () => {
-    if(this.sound.locked){
-        this.sound.unlock()
-    }
-})
+
 
 /* CAMERA LIMITS */
 this.targetScroll = 0
