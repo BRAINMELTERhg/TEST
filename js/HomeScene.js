@@ -34,6 +34,13 @@ this.WORLD_HEIGHT = 720
 this.cameras.main.setBounds(0,0,this.WORLD_WIDTH,this.WORLD_HEIGHT)
 this.physics.world.setBounds(0,0,this.WORLD_WIDTH,this.WORLD_HEIGHT)
 
+/* CAMERA ADJUSTMENT */
+this.resizeGame()
+
+this.scale.on("resize", this.resizeGame, this)
+
+
+
 /* STAR BACKGROUND */
 
 this.stars = this.add.tileSprite(
@@ -102,12 +109,11 @@ window.location.href="https://instagram.com/weirddreams.zzz"
 
 this.music = this.sound.add("music",{loop:true})
 
-this.music.play()
 
 this.musicText = this.add.text(
 20,
 20,
-"music on",
+"music off",
 {
 font:"24px Arial",
 fill:"#ffffff"
@@ -116,7 +122,7 @@ fill:"#ffffff"
 
 this.musicText.setInteractive()
 
-this.musicOn = true
+this.musicOn = false
 
 this.musicText.on("pointerdown",()=>{
 
@@ -136,25 +142,44 @@ this.musicOn=true
 
 })
 
-/* CAMERA SCROLL CONTROL */
+/* CAMERA LIMITS */
 
-this.input.on("wheel",(pointer,dx,dy)=>{
+this.maxScroll = this.WORLD_WIDTH - this.scale.width
 
-this.cameras.main.scrollX += dy
+
+/* MOUSE WHEEL SCROLL */
+
+this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY) => {
+
+this.cameras.main.scrollX += deltaY * 0.5
+
+this.cameras.main.scrollX = Phaser.Math.Clamp(
+this.cameras.main.scrollX,
+0,
+this.maxScroll
+)
 
 })
 
-/* MOBILE DRAG */
 
-this.input.on("pointermove",(pointer)=>{
+/* MOBILE DRAG SCROLL */
+
+this.input.on("pointermove", (pointer) => {
 
 if(pointer.isDown){
 
 this.cameras.main.scrollX -= pointer.velocity.x * 0.02
 
+this.cameras.main.scrollX = Phaser.Math.Clamp(
+this.cameras.main.scrollX,
+0,
+this.maxScroll
+)
+
 }
 
 })
+
 
 }
 
@@ -164,6 +189,18 @@ update(){
 
 this.stars.tilePositionX += 0.3
 this.stars.tilePositionY -= 0.2
+
+}
+
+resizeGame(){
+
+let height = this.scale.height
+
+let zoom = height / 720
+
+this.cameras.main.setZoom(zoom)
+
+this.maxScroll = this.WORLD_WIDTH - (this.scale.width / zoom)
 
 }
 
