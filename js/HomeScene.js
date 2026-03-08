@@ -107,22 +107,30 @@ window.location.href="https://instagram.com/weirddreams.zzz"
 
 /* MUSIC */
 
+//unlock audio blocker
+this.input.once("pointerdown", () => {
+
+if(!this.sound.locked){
+
+return
+
+}
+
+this.sound.unlock()
+
+})
+
+//main toggle
 this.music = this.sound.add("music",{loop:true})
 
+this.musicOn = false
 
-this.musicText = this.add.text(
-20,
-20,
-"music off",
-{
+this.musicText = this.add.text(20,20,"music off",{
 font:"24px Arial",
 fill:"#ffffff"
-}
-).setScrollFactor(0)
+}).setScrollFactor(0)
 
 this.musicText.setInteractive()
-
-this.musicOn = false
 
 this.musicText.on("pointerdown",()=>{
 
@@ -147,38 +155,41 @@ this.musicOn=true
 this.maxScroll = this.WORLD_WIDTH - this.scale.width
 
 
-/* MOUSE WHEEL SCROLL */
-
+// DESKTOP SCROLL (mouse wheel / trackpad)
 this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY) => {
-
-this.cameras.main.scrollX += deltaY * 0.5
-
-this.cameras.main.scrollX = Phaser.Math.Clamp(
-this.cameras.main.scrollX,
-0,
-this.maxScroll
-)
-
+    this.cameras.main.scrollX += deltaY * 2.5   // adjust speed
+    this.cameras.main.scrollX = Phaser.Math.Clamp(
+        this.cameras.main.scrollX,
+        0,
+        this.maxScroll
+    )
 })
 
 
-/* MOBILE DRAG SCROLL */
+/* TOUCH / MOBILE DRAG SCROLL */
+if(this.sys.game.device.input.touch){
 
-this.input.on("pointermove", (pointer) => {
+    this.dragStartX = 0
+    this.cameraStartX = 0
 
-if(pointer.isDown){
+    this.input.on("pointerdown",(pointer)=>{
+        this.dragStartX = pointer.x
+        this.cameraStartX = this.cameras.main.scrollX
+    })
 
-this.cameras.main.scrollX -= pointer.velocity.x * 0.02
-
-this.cameras.main.scrollX = Phaser.Math.Clamp(
-this.cameras.main.scrollX,
-0,
-this.maxScroll
-)
+    this.input.on("pointermove",(pointer)=>{
+        if(pointer.isDown){
+            let dragDistance = pointer.x - this.dragStartX
+            this.cameras.main.scrollX = this.cameraStartX - dragDistance
+            this.cameras.main.scrollX = Phaser.Math.Clamp(
+                this.cameras.main.scrollX,
+                0,
+                this.maxScroll
+            )
+        }
+    })
 
 }
-
-})
 
 
 }
