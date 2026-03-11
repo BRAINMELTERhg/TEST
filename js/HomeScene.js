@@ -7,7 +7,6 @@ super("HomeScene")
 preload(){
 
 this.load.image("stars","assets/images/STARS.png")
-
 this.load.image("floor","assets/images/FLOOR.png")
 
 this.load.spritesheet("logo","assets/sprites/LOGO.png",{
@@ -34,18 +33,15 @@ this.WORLD_HEIGHT = 720
 this.cameras.main.setBounds(0,0,this.WORLD_WIDTH,this.WORLD_HEIGHT)
 this.physics.world.setBounds(0,0,this.WORLD_WIDTH,this.WORLD_HEIGHT)
 
-/* CAMERA ADJUSTMENT */
-this.resizeGame()
+/* CAMERA SCALE */
 
+this.resizeGame()
 this.scale.on("resize", this.resizeGame, this)
 
- // --- first user interaction for mobile ---
-    this.input.once("pointerdown", () => {
-        if (this.sound.locked) this.sound.unlock();
-        // you can also do other mobile-specific setup here if needed
-    });
+/* AUDIO */
 
-
+this.music = this.sound.add("music",{loop:true})
+this.musicOn = false
 
 /* STAR BACKGROUND */
 
@@ -67,11 +63,7 @@ this.floor = this.add.image(
 
 /* LOGO */
 
-this.logo = this.add.sprite(
-250,
-250,
-"logo"
-)
+this.logo = this.add.sprite(250,250,"logo")
 
 this.anims.create({
 key:"logo_anim",
@@ -84,11 +76,7 @@ this.logo.play("logo_anim")
 
 /* DOOR */
 
-this.door = this.physics.add.sprite(
-300,
-500,
-"door"
-)
+this.door = this.physics.add.sprite(300,500,"door")
 
 this.anims.create({
 key:"door_anim",
@@ -100,86 +88,101 @@ repeat:-1
 this.door.play("door_anim")
 
 this.door.setVelocityX(80)
-this.door.setCollideWorldBounds(true)
 this.door.setBounce(1)
+this.door.setCollideWorldBounds(true)
 
-/* CLICKABLE DOOR */
+/* SMALLER CLICK AREA */
 
 this.door.setInteractive(
-    new Phaser.Geom.Rectangle(20, 10, 210, 230),
-    Phaser.Geom.Rectangle.Contains
-);
+new Phaser.Geom.Rectangle(40,30,170,190),
+Phaser.Geom.Rectangle.Contains
+)
 
-this.door.on("pointerdown", () => {
-    // direct user tap triggers the new tab
-    window.open("https://instagram.com/weirddreams.zzz", "_blank");
-});
+/* DOOR LINK (NEW WINDOW MOBILE + DESKTOP) */
 
-/* MUSIC */
+this.door.on("pointerdown",()=>{
 
-this.music = this.sound.add("music", { loop: true });
-this.musicOn = false; // start OFF
+if(this.sound.locked){
+this.sound.unlock()
+}
 
-// Create music toggle text
-this.musicText = this.add.text(20, 20, "music off", {
-    font: "24px Arial",
-    fill: "#ffffff"
+const newWindow = window.open(
+"https://instagram.com/weirddreams.zzz",
+"_blank"
+)
+
+if(newWindow){
+newWindow.opener = null
+}
+
+})
+
+/* MUSIC TOGGLE */
+
+this.musicText = this.add.text(20,20,"music off",{
+font:"24px Arial",
+color:"#ffffff"
 })
 .setScrollFactor(0)
 .setDepth(1000)
-.setInteractive();
+.setInteractive()
 
-this.musicText.on("pointerdown", () => {
-    // This tap unlocks audio and plays/stops music
-    if (!this.musicOn) {
-        if (this.sound.locked) {
-            this.sound.unlock(); // unlocks audio on mobile
-        }
-        this.music.play();
-        this.musicText.setText("music on");
-        this.musicOn = true;
-    } else {
-        this.music.stop();
-        this.musicText.setText("music off");
-        this.musicOn = false;
-    }
-});
+this.musicText.on("pointerdown",()=>{
 
+if(this.sound.locked){
+this.sound.unlock()
+}
 
+if(!this.musicOn){
+this.music.play()
+this.musicText.setText("music on")
+this.musicOn = true
+}
+else{
+this.music.stop()
+this.musicText.setText("music off")
+this.musicOn = false
+}
 
-/* CAMERA LIMITS */
-this.targetScroll = 0
-this.maxScroll = this.WORLD_WIDTH - (this.scale.width / (this.scale.height / 720)) // keep zoom scaling
-
-/* SCROLLING */
-// DESKTOP: mouse wheel & trackpad
-this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY) => {
-    this.targetScroll += deltaY * 2.5   // adjust speed
-    this.targetScroll = Phaser.Math.Clamp(this.targetScroll, 0, this.maxScroll)
 })
 
-// MOBILE: touch drag
-if(this.sys.game.device.input.touch){
+/* CAMERA LIMITS */
 
-    this.dragStartX = 0
-    this.cameraStartX = 0
+this.targetScroll = 0
+this.maxScroll = this.WORLD_WIDTH - (this.scale.width / this.cameras.main.zoom)
 
-    this.input.on("pointerdown", (pointer) => {
-        this.dragStartX = pointer.x
-        this.cameraStartX = this.targetScroll
-    })
+/* DESKTOP SCROLL */
 
-    this.input.on("pointermove", (pointer) => {
-        if(pointer.isDown){
-            let dragDistance = pointer.x - this.dragStartX
-            let speedFactor = 2.5
-            this.targetScroll = this.cameraStartX - dragDistance * speedFactor
-            this.targetScroll = Phaser.Math.Clamp(this.targetScroll, 0, this.maxScroll)
-        }
-    })
+this.input.on("wheel",(pointer,objects,deltaX,deltaY)=>{
+
+this.targetScroll += deltaY * 2.5
+this.targetScroll = Phaser.Math.Clamp(this.targetScroll,0,this.maxScroll)
+
+})
+
+/* MOBILE DRAG */
+
+this.dragStartX = 0
+this.cameraStartX = 0
+
+this.input.on("pointerdown",(pointer)=>{
+this.dragStartX = pointer.x
+this.cameraStartX = this.targetScroll
+})
+
+this.input.on("pointermove",(pointer)=>{
+
+if(pointer.isDown){
+
+let dragDistance = pointer.x - this.dragStartX
+let speed = 2.5
+
+this.targetScroll = this.cameraStartX - dragDistance * speed
+this.targetScroll = Phaser.Math.Clamp(this.targetScroll,0,this.maxScroll)
 
 }
 
+})
 
 }
 
@@ -190,25 +193,24 @@ update(){
 this.stars.tilePositionX += 0.3
 this.stars.tilePositionY -= 0.2
 
-/* SMOOTH SCROLLING */
+/* SMOOTH CAMERA */
+
 this.cameras.main.scrollX = Phaser.Math.Linear(
-    this.cameras.main.scrollX,
-    this.targetScroll,
-    0.15
+this.cameras.main.scrollX,
+this.targetScroll,
+0.15
 )
 
 }
 
 resizeGame(){
-    let height = this.scale.height
-    let zoom = height / 720
-    this.cameras.main.setZoom(zoom)
-    this.maxScroll = this.WORLD_WIDTH - (this.scale.width / zoom)
+
+let zoom = this.scale.height / 720
+
+this.cameras.main.setZoom(zoom)
+
+this.maxScroll = this.WORLD_WIDTH - (this.scale.width / zoom)
+
 }
-
-//this.resizeGame()
-//this.scale.on("resize", this.resizeGame, this)
-
-
 
 }
