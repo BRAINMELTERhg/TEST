@@ -117,7 +117,7 @@ newWindow.opener = null
 
 })
 
-/* MUSIC TOGGLE */
+/* MUSIC TOGGLE TEXT */
 
 this.musicText = this.add.text(20,20,"music off",{
 font:"24px Arial",
@@ -126,6 +126,9 @@ color:"#ffffff"
 .setScrollFactor(0)
 .setDepth(1000)
 .setInteractive()
+
+
+/* MUSIC CLICK EVENT */
 
 this.musicText.on("pointerdown",()=>{
 
@@ -137,8 +140,7 @@ if(!this.musicOn){
 this.music.play()
 this.musicText.setText("music on")
 this.musicOn = true
-}
-else{
+}else{
 this.music.stop()
 this.musicText.setText("music off")
 this.musicOn = false

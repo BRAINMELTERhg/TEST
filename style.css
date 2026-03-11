@@ -1,6 +1,7 @@
 body{
 margin:0;
-overflow:hidden;
+height: 200vh;
+overflow-x: hidden;
 cursor:url("assets/images/HAND.png"), auto;
 background:black;
 }
@@ -8,4 +9,8 @@ background:black;
 #game-container{
 width:100vw;
 height:100vh;
+}
+
+canvas{
+display:block;
 }
