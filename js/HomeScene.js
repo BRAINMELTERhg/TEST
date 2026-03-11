@@ -71,6 +71,22 @@ export default class HomeScene extends Phaser.Scene {
         this.anims.create({ key: "logo_anim", frames: this.anims.generateFrameNumbers("logo"), frameRate: 9, repeat: -1 });
         this.logo.play("logo_anim");*/
 
+// Unlock audio by first tap anywhere
+const unlockDiv = document.createElement("div");
+unlockDiv.style.position = "absolute";
+unlockDiv.style.top = "0";
+unlockDiv.style.left = "0";
+unlockDiv.style.width = "100%";
+unlockDiv.style.height = "100%";
+unlockDiv.style.zIndex = "9999";
+unlockDiv.style.background = "transparent";
+document.body.appendChild(unlockDiv);
+
+unlockDiv.addEventListener("pointerdown", () => {
+    if (this.sound.locked) this.sound.unlock();
+    unlockDiv.remove(); // remove overlay so it doesn't block the canvas
+}, { once: true });
+
         // Music
         this.music = this.sound.add("music", { loop: true });
         this.musicOn = false;
@@ -90,21 +106,7 @@ export default class HomeScene extends Phaser.Scene {
             }
         });
 
-        // Unlock audio by first tap anywhere
-const unlockDiv = document.createElement("div");
-unlockDiv.style.position = "absolute";
-unlockDiv.style.top = "0";
-unlockDiv.style.left = "0";
-unlockDiv.style.width = "100%";
-unlockDiv.style.height = "100%";
-unlockDiv.style.zIndex = "9999";
-unlockDiv.style.background = "transparent";
-document.body.appendChild(unlockDiv);
-
-unlockDiv.addEventListener("pointerdown", () => {
-    if (this.sound.locked) this.sound.unlock();
-    unlockDiv.remove(); // remove overlay so it doesn't block the canvas
-}, { once: true });
+        
 
         // Add clickable objects
         this.allClickableObjects = [];

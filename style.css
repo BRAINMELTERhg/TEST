@@ -8,7 +8,10 @@ body {
 /* custom cursor for HTML links */
 .clickable-link {
     cursor: url("assets/images/HAND2.png"), auto;
-    position: absolute;
-    background: transparent;
-    z-index: 10;
+  position: absolute;
+  display: block;
+  width: 100px; /* will be updated dynamically */
+  height: 100px; /* will be updated dynamically */
+  background: transparent;
+  z-index: 9999;
 }
