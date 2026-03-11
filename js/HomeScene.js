@@ -11,7 +11,11 @@ export default class HomeScene extends Phaser.Scene {
         this.load.audio("music", "assets/audio/MUSIC.mp3");
     }
 
-    create() {
+  create() {
+    // Unlock audio on first user tap
+    this.input.once('pointerdown', () => {
+        if (this.sound.locked) this.sound.unlock();
+    }, this);
         // World size
         this.WORLD_WIDTH = 5100;
         this.WORLD_HEIGHT = 720;
@@ -37,26 +41,25 @@ export default class HomeScene extends Phaser.Scene {
         this.door.play("door_anim");
         this.door.setVelocityX(80).setBounce(1).setCollideWorldBounds(true);
 
-        // Music toggle
-        this.music = this.sound.add("music", { loop: true });
-        this.musicOn = false;
-        this.musicText = this.add.text(20, 20, "music off", { font: "24px Arial", color: "#ffffff" })
-            .setScrollFactor(0)
-            .setDepth(1000)
-            .setInteractive({ useHandCursor: true });
+         // Music
+    this.music = this.sound.add("music", { loop: true });
+    this.musicOn = false;
+    this.musicText = this.add.text(20, 20, "music off", { font: "24px Arial", color: "#ffffff" })
+        .setScrollFactor(0)
+        .setDepth(1000)
+        .setInteractive();
 
-        this.musicText.on("pointerdown", () => {
-            if (this.sound.locked) this.sound.unlock();
-            if (!this.musicOn) {
-                this.music.play();
-                this.musicText.setText("music on");
-                this.musicOn = true;
-            } else {
-                this.music.stop();
-                this.musicText.setText("music off");
-                this.musicOn = false;
-            }
-        });
+    this.musicText.on('pointerdown', () => {
+        if (!this.musicOn) {
+            this.music.play();
+            this.musicText.setText("music on");
+            this.musicOn = true;
+        } else {
+            this.music.stop();
+            this.musicText.setText("music off");
+            this.musicOn = false;
+        }
+    });
 
         // Door link (works on mobile + desktop)
         this.doorLink = document.createElement("a");

@@ -21,7 +21,7 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-// Optional: hide mobile bars on first interaction
+/* Optional: hide mobile bars on first interaction
 window.addEventListener('touchstart', () => {
     window.scrollTo(0, 1);
-}, { once: true });
+}, { once: true }); */
