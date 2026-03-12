@@ -29,7 +29,7 @@ export default class HomeScene extends Phaser.Scene {
                 { key: "SHOP_DOOR", x: 451, y: 645, url: "https://instagram.com/hg_is_me" }
             ],
             animated: [
-                { key: "logo", x: 232, y: 294, url: "https://brainmelter.net", frameWidth: 290, frameHeight: 141 },
+                { key: "logo", x: 260, y: 294, url: "https://brainmelter.net", frameWidth: 290, frameHeight: 141 },
                 { key: "ART_DOOR", x: 2023, y: 486, url: "https://instagram.com/hg_is_me", frameWidth: 420, frameHeight: 422 },
                 { key: "BBO_DOOR", x: 2617, y: 370, url: "https://brainmelter.itch.io/bebo", frameWidth: 555, frameHeight: 536 },
                 { key: "BOOK", x: 146, y: 494, url: "https://example.com", frameWidth: 158, frameHeight: 180 },
@@ -91,7 +91,7 @@ unlockDiv.addEventListener("pointerdown", () => {
         // Music
         this.music = this.sound.add("music", { loop: true });
         this.musicOn = false;
-        this.musicText = this.add.text(20, 20, "music off", { font: "24px Arial", color: "#ffffff" })
+        this.musicText = this.add.text(-200, -70, "music off", { font: "24px Arial", color: "#ffffff" })
             .setScrollFactor(0)
             .setDepth(1000)
             .setInteractive();
@@ -209,8 +209,8 @@ this.allClickableObjects.forEach(obj => {
     obj.link.style.width = width * zoom + "px";
     obj.link.style.height = height * zoom + "px";
 
-    obj.link.style.left = rect.left + screenX - (width * zoom / 2) + 160 + "px";
-    obj.link.style.top = rect.top + screenY - (height * zoom / 2) + 90 + "px";
+    obj.link.style.left = rect.left + screenX - (width * zoom / 2) /*+ 160*/ + "px";
+    obj.link.style.top = rect.top + screenY - (height * zoom / 2) /*+ 90*/ + "px";
 
 });
     }
