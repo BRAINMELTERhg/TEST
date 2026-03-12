@@ -92,7 +92,7 @@ unlockDiv.addEventListener("pointerdown", () => {
         // Music //hhmmmm
         this.music = this.sound.add("music", { loop: true });
         this.musicOn = false;
-        this.musicText = this.add.text(-60, 2, "music off", { font: "24px Arial", color: "#ffffff" })
+        this.musicText = this.add.text(-60, 700, "music off", { font: "24px Arial", color: "#ffffff" })
             .setScrollFactor(0)
             .setDepth(1000)
             .setInteractive();
