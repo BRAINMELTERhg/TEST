@@ -90,7 +90,7 @@ unlockDiv.addEventListener("pointerdown", () => {
         // Music //hhmmmm
         this.music = this.sound.add("music", { loop: true });
         this.musicOn = false;
-        this.musicText = this.add.text(-90, -20, "music off", { font: "24px Arial", color: "#ffffff" })
+        this.musicText = this.add.text(-70, 10, "music off", { font: "24px Arial", color: "#ffffff" })
             .setScrollFactor(0)
             .setDepth(1000)
             .setInteractive();
@@ -211,7 +211,7 @@ this.allClickableObjects.forEach(obj => {
     obj.link.style.height = height + "px";
 
     obj.link.style.left = screenX /*- width / 2*/ + "px";
-    obj.link.style.top = screenY /*- height / 2*/ + "px";
+    obj.link.style.top = screenY - height / 3 + "px";
 
 });
     }
