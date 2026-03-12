@@ -21,7 +21,6 @@ export default class HomeScene extends Phaser.Scene {
 
         //AUDIO ASSETS
         this.load.audio("music", "assets/audio/MUSIC.mp3");
-
         // Example clickable objects
         this.clickables = {
             still: [
@@ -39,7 +38,7 @@ export default class HomeScene extends Phaser.Scene {
                 { key: "MM_DOOR", x: 3220, y: 409, url: "https://brainmelter.itch.io/math-monsters", frameWidth: 400, frameHeight: 395 },
             ],
             moving: [
-                { key: "door", x: 766, y: 623, url: "https://instagram.com/weirddreams.zzz", frameWidth: 250, frameHeight: 250, velocityX: 80 }
+                { key: "door", x: 1698, y: 638, url: "https://instagram.com/weirddreams.zzz", frameWidth: 250, frameHeight: 250, velocityX: 80 }
             ]
         };
 
@@ -127,8 +126,8 @@ unlockDiv.addEventListener("pointerdown", () => {
 
     this.tweens.add({
         targets: obj,
-        x: 1698,
-        y: 638,
+        x: 766,
+        y: 623,
         duration: 6500,
         ease: "Linear",
         yoyo: true,
