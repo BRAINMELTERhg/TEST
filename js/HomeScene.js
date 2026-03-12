@@ -88,10 +88,10 @@ unlockDiv.addEventListener("pointerdown", () => {
     unlockDiv.remove(); // remove overlay so it doesn't block the canvas
 }, { once: true });
 
-        // Music
+        // Music //hhmmmm
         this.music = this.sound.add("music", { loop: true });
         this.musicOn = false;
-        this.musicText = this.add.text(-200, -70, "music off", { font: "24px Arial", color: "#ffffff" })
+        this.musicText = this.add.text(-90, -20, "music off", { font: "24px Arial", color: "#ffffff" })
             .setScrollFactor(0)
             .setDepth(1000)
             .setInteractive();
@@ -193,24 +193,26 @@ unlockDiv.addEventListener("pointerdown", () => {
         // Update HTML link positions
        const cam = this.cameras.main;
 const rect = this.game.canvas.getBoundingClientRect();
-const zoom = cam.zoom;
 
 this.allClickableObjects.forEach(obj => {
 
     if (!obj.link) return;
 
+    const zoom = cam.zoom;
+
+    // Convert world position to screen position
+    const screenX = (obj.x - cam.scrollX) * zoom + rect.left;
+    const screenY = (obj.y - cam.scrollY) * zoom + rect.top;
+
     // clickable area 15% smaller
-    const width = obj.displayWidth * 0.85;
-    const height = obj.displayHeight * 0.85;
+    const width = obj.displayWidth * 0.85 * zoom;
+    const height = obj.displayHeight * 0.85 * zoom;
 
-    const screenX = (obj.x - cam.scrollX) * zoom;
-    const screenY = (obj.y - cam.scrollY) * zoom;
+    obj.link.style.width = width + "px";
+    obj.link.style.height = height + "px";
 
-    obj.link.style.width = width * zoom + "px";
-    obj.link.style.height = height * zoom + "px";
-
-    obj.link.style.left = rect.left + screenX - (width * zoom / 2) /*+ 160*/ + "px";
-    obj.link.style.top = rect.top + screenY - (height * zoom / 2) /*+ 90*/ + "px";
+    obj.link.style.left = screenX /*- width / 2*/ + "px";
+    obj.link.style.top = screenY /*- height / 2*/ + "px";
 
 });
     }
