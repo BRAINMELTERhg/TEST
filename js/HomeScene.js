@@ -52,6 +52,8 @@ export default class HomeScene extends Phaser.Scene {
     }
 
     create() {
+
+
         this.WORLD_WIDTH = 5200;
         this.WORLD_HEIGHT = 900;
 
@@ -106,7 +108,13 @@ unlockDiv.addEventListener("pointerdown", () => {
             }
         });
 
-        
+        //allow for pre click scrolling
+this.input.mouse.disableContextMenu();
+
+this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY) => {
+    this.targetScroll += deltaY * 2.5;
+    this.targetScroll = Phaser.Math.Clamp(this.targetScroll, 0, this.maxScroll);
+});
 
         // Add clickable objects
         this.allClickableObjects = [];
