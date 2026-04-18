@@ -25,7 +25,7 @@ export default class HomeScene extends Phaser.Scene {
         this.clickables = {
             still: [
                 { key: "BOARD", x: 655, y: 388, url: "https://goodandweirddavis.org" },
-                { key: "SHOP_DOOR", x: 451, y: 645, url: "https://instagram.com/hg_is_me" }
+                { key: "SHOP_DOOR", x: 451, y: 645, url: "https://brainmelter-shop.bigcartel.com" }
             ],
             animated: [
                 { key: "logo", x: 260, y: 294, url: "https://brainmelter.net", frameWidth: 290, frameHeight: 141 },
@@ -52,8 +52,7 @@ export default class HomeScene extends Phaser.Scene {
     }
 
     create() {
-
-
+        //hopefully this works
         this.WORLD_WIDTH = 5200;
         this.WORLD_HEIGHT = 900;
 
